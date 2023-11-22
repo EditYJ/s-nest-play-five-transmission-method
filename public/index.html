@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/qs@6.10.2/dist/qs.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <button onclick="urlParam()">Param请求</button>
+    <button onclick="urlQuery()">Query请求</button>
+    <button onclick="formUrlencoded()">form-urlencoded请求</button>
+    <button onclick="formUrlencodedJson()">formUrlencodedJson请求</button>
+    <input id="fileInput" type="file" multiple onchange="formData()" />
+
+    <script>
+      async function urlParam() {
+        const res = await axios.get('/person/1111');
+        console.log(res);
+      }
+
+      async function urlQuery() {
+        const res = await axios.get('/person/find', {
+          params: { name: '小明' },
+        });
+        console.log(res);
+      }
+
+      async function formUrlencoded() {
+        const res = await axios.post(
+          '/person/create',
+          Qs.stringify({
+            name: '小红',
+            age: 20,
+          }),
+          {
+            headers: { 'content-type': 'application/x-www-form-urlencoded' },
+          },
+        );
+        console.log(res);
+      }
+
+      async function formUrlencodedJson() {
+        const res = await axios.post('/person/create', {
+          name: '小红',
+          age: 20,
+        });
+        console.log(res);
+      }
+
+      async function formData() {
+        const data = new FormData();
+        data.set('name', '光');
+        data.set('age', 20);
+        data.set('file1', fileInput.files[0]);
+        data.set('file2', fileInput.files[1]);
+
+        const res = await axios.post('/person/formData', data, {
+          headers: { 'content-type': 'multipart/form-data' },
+        });
+        console.log(res);
+      }
+    </script>
+  </body>
+</html>
